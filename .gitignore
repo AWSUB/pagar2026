@@ -1,0 +1,21 @@
+# Dependency
+node_modules/
+
+# Environment Variables
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac & Windows system files
+.DS_Store
+Thumbs.db
+
+# IDE - VS Code / WebStorm
+.vscode/
+.idea/
+
+# Local Uploads 
+/uploads/
