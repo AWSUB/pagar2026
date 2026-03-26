@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Review.belongsTo(models.User, { 
         foreignKey: 'id_user', 
-        as: 'reviewer' 
+        as: 'user' 
       });
       
       Review.belongsTo(models.Sppg, { 
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_sppg: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     id_school: DataTypes.INTEGER,
     id_user: {
