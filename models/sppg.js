@@ -41,7 +41,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    sppg_address: DataTypes.TEXT
+    sppg_address: DataTypes.TEXT,
+    latitude: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    longitude: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    monthly_budget: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'Sppg',
