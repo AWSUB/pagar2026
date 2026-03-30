@@ -1,53 +1,53 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const adminValidator = require('../validators/adminValidator');
+const validate = require('../middlewares/validate');
 const { verifyToken, isAdmin } = require('../middlewares/authMiddleware');
 
-router.get('/accounts/pending', 
+router.use(
     verifyToken, 
-    isAdmin, 
+    isAdmin
+);
+
+router.get('/accounts/pending', 
     adminController.getPendingAccounts
 );
 
 router.get('/accounts/active', 
-    verifyToken, 
-    isAdmin, 
     adminController.getActiveAccounts
 );
 
 router.get('/sppgs', 
-    verifyToken, 
-    isAdmin, 
     adminController.getAllSppg
 );
 
 router.get('/schools', 
-    verifyToken, 
-    isAdmin, 
     adminController.getAllSchool
 );
 
-router.put('/accounts/:id_user/status', 
-    verifyToken, 
-    isAdmin, 
-    adminController.updateAccountStatus
-);
-
-router.put('/accounts/profile', 
-    verifyToken, 
-    isAdmin, 
-    adminController.updateProfile
-);
-
 router.get('/dashboard', 
-    verifyToken, 
-    isAdmin, 
     adminController.getDashboardData
 );
 
-router.put('/reviews/:id_review/status', 
-    verifyToken, 
-    isAdmin, 
+router.patch(
+    '/accounts/:id_user/status', 
+    adminValidator.updateAccountStatus, 
+    validate,                           
+    adminController.updateAccountStatus 
+);
+
+router.patch(
+    '/accounts/profile', 
+    adminValidator.updateProfile, 
+    validate, 
+    adminController.updateProfile
+);
+
+router.patch(
+    '/reviews/:id_review/status', 
+    adminValidator.updateReviewStatus, 
+    validate, 
     adminController.updateReviewStatus
 );
 
