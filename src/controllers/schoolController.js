@@ -1,15 +1,15 @@
-const schoolService = require('../services/schoolService');
+const schoolService = require('../service/schoolService');
+
+const getPaginationParams = (query, defaultLimit = 10) => {
+    const page = parseInt(query.page, 10) || 1;
+    const limit = parseInt(query.limit, 10) || defaultLimit;
+    return { page, limit };
+};
 
 class SchoolController {
-    _getPaginationParams(query, defaultLimit = 10) {
-        const page = parseInt(query.page, 10) || 1;
-        const limit = parseInt(query.limit, 10) || defaultLimit;
-        return { page, limit };
-    }
-
     async getSppgList(req, res) {
         try {
-            const { page, limit } = this._getPaginationParams(req.query, 20);
+            const { page, limit } = getPaginationParams(req.query, 20);
             const result = await schoolService.getSppgList(page, limit);
             
             return res.status(200).json({
@@ -71,7 +71,7 @@ class SchoolController {
 
     async getDailyReports(req, res) {
         try {
-            const { page, limit } = this._getPaginationParams(req.query, 10);
+            const { page, limit } = getPaginationParams(req.query, 10);
             const result = await schoolService.getDailyReports(page, limit);
             
             return res.status(200).json({ 
@@ -111,7 +111,7 @@ class SchoolController {
 
     async getDashboardReviews(req, res) {
         try {
-            const { page, limit } = this._getPaginationParams(req.query, 15);
+            const { page, limit } = getPaginationParams(req.query, 15);
             const result = await schoolService.getDashboardReviews(page, limit);
             
             return res.status(200).json({
@@ -130,7 +130,7 @@ class SchoolController {
 
     async getDashboardSppgReports(req, res) {
         try {
-            const { page, limit } = this._getPaginationParams(req.query, 15);
+            const { page, limit } = getPaginationParams(req.query, 15);
             const result = await schoolService.getDashboardSppgReports(page, limit);
             
             return res.status(200).json({
