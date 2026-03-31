@@ -83,6 +83,28 @@ class PublicRepository {
             ]
         });
     }
+
+    async findDailyReportById(id_daily_report) {
+        return await DailyReport.findByPk(id_daily_report, {
+            include: [
+                {
+                    model: Sppg,
+                    as: 'sppg',
+                    attributes: [
+                        'sppg_name', 
+                        'sppg_address'
+                    ]
+                },
+                {
+                    model: Attachment,
+                    as: 'attachments',
+                    where: { entity_type: 'DAILY_REPORT' },
+                    required: false,
+                    attributes: ['file_url', 'file_type']
+                }
+            ]
+        });
+    }
 }
 
 module.exports = new PublicRepository();

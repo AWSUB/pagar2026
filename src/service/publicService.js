@@ -70,6 +70,16 @@ class PublicService {
     async getDashboardSppgReports() {
         return await publicRepository.findDashboardSppgReports();
     }
+
+    async getDetailSppgReport(id_daily_report) {
+        const report = await publicRepository.findDailyReportById(id_daily_report);
+        
+        if (!report) {
+            throw new Error('Laporan SPPG not found');
+        }
+        
+        return report;
+    }
 }
 
 module.exports = new PublicService();

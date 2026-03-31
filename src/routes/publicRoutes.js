@@ -21,5 +21,10 @@ router.post('/reviews',
 
 router.get('/dashboard/reviews', publicController.getDashboardReviews);
 router.get('/dashboard/sppg_reports', publicController.getDashboardSppgReports);
+router.get('/dashboard/sppg_reports/:id_daily_report', 
+    publicValidator.getDetailReport, 
+    validate, 
+    publicController.getDetailSppgReport
+);
 
 module.exports = router;
