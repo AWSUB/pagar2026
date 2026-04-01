@@ -7,23 +7,27 @@ const sppgValidator = {
     ],
 
     getPeriodic: [
-        query('start_date').notEmpty().isISO8601().withMessage('Valid start_date required (YYYY-MM-DD)'),
-        query('end_date').notEmpty().isISO8601().withMessage('Valid end_date required (YYYY-MM-DD)'),
+        query('start_date').notEmpty().isISO8601().withMessage('start_date menggunakan format (YYYY-MM-DD)'),
+        query('end_date').notEmpty().isISO8601().withMessage('end_date tidak boleh kosong (YYYY-MM-DD)'),
         query('page').optional().isInt({ min: 1 }).toInt(),
         query('limit').optional().isInt({ min: 1 }).toInt()
     ],
 
     createDailyReport: [
-        body('date_report').notEmpty().isISO8601().withMessage('Valid date_report is required'),
-        body('menu_name').notEmpty().isString().withMessage('Menu name is required'),
-        body('meal_time').notEmpty().isString().withMessage('Meal time is required'),
-        body('total_portion').notEmpty().isInt({ min: 1 }).withMessage('Portion must be a number'),
+        body('date_report').notEmpty().isISO8601().withMessage('date_report tidak boleh kosong'),
+        body('menu_name').notEmpty().isString().withMessage('Menu name tidak boleh kosong'),
+        body('meal_time').notEmpty().isString().withMessage('Meal time tidak boleh kosong'),
+        body('total_portion').notEmpty().isInt({ min: 1 }).withMessage('Portion tidak boleh kosong'),
+        body('description')
+            .notEmpty().withMessage('Deskripsi laporan tidak boleh kosong')
+            .isString().withMessage('Deskripsi harus berupa teks')
+            .isLength({ min: 10 }).withMessage('Deskripsi minimal 10 karakter'),
         body('energy').notEmpty().isNumeric(),
         body('protein').notEmpty().isNumeric(),
         body('fat').notEmpty().isNumeric(),
         body('carbohydrate').notEmpty().isNumeric(),
         body('budgets')
-            .notEmpty().withMessage('Budgets detail is required')
+            .notEmpty().withMessage('Budgets detail tidak boleh kosong')
             .custom((value) => {
                 try {
                     const data = typeof value === 'string' ? JSON.parse(value) : value;
@@ -41,7 +45,7 @@ const sppgValidator = {
     ],
 
     updateBudget: [
-        body('monthly_budget').notEmpty().isNumeric().withMessage('Monthly budget is required (number)')
+        body('monthly_budget').notEmpty().isNumeric().withMessage('Monthly budget tidak boleh kosong (angka)')
     ],
 
     checkUUID: [
