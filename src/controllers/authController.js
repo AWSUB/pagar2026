@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const authService = require('../service/authService');
 
 const authController = {
@@ -75,6 +76,55 @@ const authController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    async forgotPassword(req, res) {
+        const { email } = req.body;
+        const user = await userRepository.findByEmail(email);
+    
+        if (!user) return res.status(404).json({ 
+            message: "Email tidak terdaftar" 
+        });
+
+        const token = crypto.randomBytes(20).toString('hex');
+        const expires = new Date(Date.now() + 3600000);
+
+        await userRepository.updateResetToken(user.id_user, token, expires);
+
+        const resetUrl = `${process.env.BASE_URL_FRONTEND}/reset-password/${token}`;
+        const html = `
+            <h3>Permintaan Reset Password</h3>
+            <p>Anda menerima email ini karena Anda meminta reset password.</p>
+            <p>Silakan klik link di bawah ini (berlaku selama 1 jam):</p>
+            <a href="${resetUrl}">${resetUrl}</a>
+    `;
+
+        await sendEmail(user.email, 'Instruksi Reset Password', html);
+        res.json({ 
+            status: "success", 
+            message: "Link reset password telah dikirim ke email" 
+        });
+    },
+
+    async resetPassword(req, res) {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+
+        const user = await userRepository.findByResetToken(token);
+
+        if (!user || user.reset_password_expires < new Date()) {
+            return res.status(400).json({ 
+                message: "Token tidak valid atau sudah kadaluarsa" 
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await userRepository.updatePasswordAndClearToken(user.id_user, hashedPassword);
+
+        res.json({ 
+            status: "success", 
+            message: "Password berhasil diperbarui" 
+        });
     }
 };
 

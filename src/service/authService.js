@@ -3,6 +3,7 @@ const authRepository = require('../repositories/authRepository');
 const HttpError = require('../utils/HttpError');
 const { generateToken } = require('../utils/jwt');
 const { sequelize } = require('../models');
+const { sendNewRegistrationEmail, sendResetLink } = require('../utils/email')
 
 class AuthService {
     async registerPublic(data) {
@@ -80,6 +81,30 @@ class AuthService {
             }, t);
 
             await t.commit();
+
+            try {
+                const admins = await useReducer.findAll({
+                    where: {
+                        role: 'ADMIN'
+                    },
+                    attributes: ['email']
+                });
+                const adminEmails = admins.map(admin => admin.email);
+
+                if (adminEmails.length > 0) {
+                    const emailData = {
+                        name: school_name,
+                        role: 'SCHOOL',
+                        email: email 
+                    };
+                    await sendNewRegistrationEmail(adminEmails, emailData);
+                }
+            } catch (emailError) {
+                console.error(
+                    'Gagal mengirim notifikasi email ke Admin:', 
+                    emailError.message
+                );            
+            }
             return newUser;
         } catch (error) {
             await t.rollback();
@@ -133,6 +158,31 @@ class AuthService {
             }, t);
 
             await t.commit();
+
+            try {
+                const admins = await useReducer.findAll({
+                    where: {
+                        role: 'ADMIN'
+                    },
+                    attributes: ['email']
+                });
+                const adminEmails = admins.map(admin => admin.email);
+
+                if (adminEmails.length > 0) {
+                    const emailData = {
+                        name: sppg_name,
+                        role: 'SPPG',
+                        email: email 
+                    };
+                    await sendNewRegistrationEmail(adminEmails, emailData);
+                }
+            } catch (emailError) {
+                console.error(
+                    'Gagal mengirim notifikasi email ke Admin:', 
+                    emailError.message
+                );            
+            }
+
             return newUser;
         } catch (error) {
             await t.rollback();
@@ -185,6 +235,29 @@ class AuthService {
             user 
         };
     }
+
+    async forgotPassword(email) {
+        const user = await User.findOne({ 
+            where: { 
+                email 
+            } 
+        });
+        
+        if (!user) {
+            throw new HttpError(404, 'Email not found.');
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        
+        user.reset_password_token = resetToken;
+        user.reset_password_expires = new Date(Date.now() + 3600000);
+        await user.save();
+
+        await sendResetLink(user.email, resetToken);
+        
+        return true;
+    }
+
 }
 
 module.exports = new AuthService();

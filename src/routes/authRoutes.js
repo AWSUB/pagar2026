@@ -32,4 +32,7 @@ router.post(
     authController.login
 );
 
+router.post('/forgot_password', authController.forgotPassword);
+router.post('/reset_password/:token', authController.resetPassword);
+
 module.exports = router;
