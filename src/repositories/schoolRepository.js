@@ -1,4 +1,5 @@
 const { School, DailyReport, Sppg, Review, Attachment, User } = require('../models');
+const { Op } = Sequelize;
 
 class SchoolRepository {
     async findAndCountAllSppg(limit, offset) {
@@ -63,11 +64,20 @@ class SchoolRepository {
         return newReview;
     }
 
-    async findAndCountDashboardReviews(limit, offset) {
+    async findAndCountDashboardReviews(limit, offset, keyword = '') {
+        const searchCondition = keyword ? {
+            [Op.or]: [
+                { menu_name: { [Op.like]: `%${keyword}%` } },
+                { '$sppg.sppg_name$': { [Op.like]: `%${keyword}%` } }
+            ]
+        } : {};
+
         return await Review.findAndCountAll({
+            where: searchCondition,
             order: [['createdAt', 'DESC']],
             limit,
             offset,
+            subQuery: false,
             include: [
                 {
                     model: School,
@@ -91,11 +101,20 @@ class SchoolRepository {
         });
     }
 
-    async findAndCountDashboardSppgReports(limit, offset) {
+    async findAndCountDashboardSppgReports(limit, offset, keyword = '') {
+        const searchCondition = keyword ? {
+            [Op.or]: [
+                { menu_name: { [Op.like]: `%${keyword}%` } },
+                { '$sppg.sppg_name$': { [Op.like]: `%${keyword}%` } }
+            ]
+        } : {};
+
         return await DailyReport.findAndCountAll({
+            where: searchCondition,
             order: [['createdAt', 'DESC']],
             limit,
             offset,
+            subQuery: false,
             include: [
                 {
                     model: Sppg,

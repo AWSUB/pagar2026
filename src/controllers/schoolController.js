@@ -3,6 +3,7 @@ const schoolService = require('../service/schoolService');
 const getPaginationParams = (query, defaultLimit = 10) => {
     const page = parseInt(query.page, 10) || 1;
     const limit = parseInt(query.limit, 10) || defaultLimit;
+    const keyword = query.search || '';
     return { page, limit };
 };
 
@@ -69,10 +70,10 @@ class SchoolController {
         }
     }
 
-    async getDailyReports(req, res) {
+    async getDailyReports(req, res, next) {
         try {
             const { page, limit } = getPaginationParams(req.query, 10);
-            const result = await schoolService.getDailyReports(page, limit);
+            const result = await schoolService.getDailyReports(page, limit, keyword);
             
             return res.status(200).json({ 
                 status: 'success', 
@@ -111,8 +112,8 @@ class SchoolController {
 
     async getDashboardReviews(req, res) {
         try {
-            const { page, limit } = getPaginationParams(req.query, 15);
-            const result = await schoolService.getDashboardReviews(page, limit);
+            const { page, limit, keyword } = getPaginationParams(req.query, 15);
+            const result = await schoolService.getDashboardReviews(page, limit, keyword);
             
             return res.status(200).json({
                 status: 'success',
@@ -130,8 +131,8 @@ class SchoolController {
 
     async getDashboardSppgReports(req, res) {
         try {
-            const { page, limit } = getPaginationParams(req.query, 15);
-            const result = await schoolService.getDashboardSppgReports(page, limit);
+            const { page, limit, keyword } = getPaginationParams(req.query, 15);
+            const result = await schoolService.getDashboardSppgReports(page, limit, keyword);
             
             return res.status(200).json({
                 status: 'success',

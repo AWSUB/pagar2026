@@ -85,9 +85,9 @@ class SchoolService {
         }
     }
 
-    async getDashboardReviews(page, limit) {
+    async getDashboardReviews(page, limit, keyword = '') {
         const offset = (page - 1) * limit;
-        const { count, rows } = await schoolRepository.findAndCountDashboardReviews(limit, offset);
+        const { count, rows } = await schoolRepository.findAndCountDashboardReviews(limit, offset, keyword);
 
         const formattedLaporan = rows.map(review => {
             const reviewData = review.toJSON();
@@ -126,9 +126,9 @@ class SchoolService {
         };
     }
 
-    async getDashboardSppgReports(page, limit) {
+    async getDashboardSppgReports(page, limit, keyword = '') {
         const offset = (page - 1) * limit;
-        const { count, rows } = await schoolRepository.findAndCountDashboardSppgReports(limit, offset);
+        const { count, rows } = await schoolRepository.findAndCountDashboardSppgReports(limit, offset, keyword);
         
         return {
             data: rows,
