@@ -6,12 +6,12 @@ services:
     container_name: pagar_base
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: pagar_db
-      MYSQL_USER: admin_pagar
-      MYSQL_PASSWORD: pagar2026
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3307:3306"                         
+      - "${DB_PORT}:3306"
     volumes:
       - pagar_db_data:/var/lib/mysql
 
@@ -21,9 +21,9 @@ services:
     restart: always
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - "8081:80"                           
+      - "8081:80"
     depends_on:
       - db
 
