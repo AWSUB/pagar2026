@@ -2,6 +2,16 @@ const publicRepository = require('../repositories/publicRepository');
 const { sequelize } = require('../models');
 
 class PublicService {
+    async getProfile(id_user) {
+        const profile = await publicRepository.getProfile(id_user);
+
+        if (!profile) {
+            throw new Error('NOT_FOUND');
+        }
+
+        return profile;
+    }
+    
     async getSppgList() {
         return await publicRepository.findAllSppg();
     }

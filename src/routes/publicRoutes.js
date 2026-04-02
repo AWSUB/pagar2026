@@ -11,6 +11,7 @@ router.use(
     isPublic
 );
 
+router.get('/profile', publicController.getProfile);
 router.get('/sppg_list', publicController.getSppgList);
 router.post('/reviews', 
     upload.array('attachments', 2),

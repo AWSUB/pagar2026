@@ -1,6 +1,19 @@
 const { School, DailyReport, Sppg, Review, Attachment, User } = require('../models');
 
 class PublicRepository {
+    async getProfile(id_user) {
+        return await User.findOne({
+            where: { 
+                id_user: id_user,
+                role: 'PUBLIC'
+            },
+            attributes: [
+                'username', 
+                'email'
+            ]
+        });
+    }
+
     async findAllSppg() {
         return await Sppg.findAll({
             attributes: [

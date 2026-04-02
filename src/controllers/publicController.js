@@ -1,6 +1,25 @@
 const publicService = require('../service/publicService');
 
 class PublicController {
+    async getProfile(req, res, next) {
+        try {
+            const profile = await publicService.getProfile(req.user.id_user);
+            
+            return res.status(200).json({ 
+                status: 'success', 
+                data: profile 
+            });
+        } catch (error) {
+            if (error.message === 'NOT_FOUND') {
+                return res.status(404).json({ 
+                    status: 'error', 
+                    message: 'Public Profile not found' 
+                });
+            }
+            next(error);
+        }
+    }
+
     async getSppgList(req, res) {
         try {
             const sppgList = await publicService.getSppgList();
