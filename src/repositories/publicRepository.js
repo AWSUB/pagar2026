@@ -130,6 +130,10 @@ async findDashboardReviews(limit, offset, keyword = '') {
                     ]
                 },
                 {
+                    model: Budget,
+                    as: 'budget'
+                },
+                {
                     model: Attachment,
                     as: 'attachments',
                     where: { entity_type: 'DAILY_REPORT' },
