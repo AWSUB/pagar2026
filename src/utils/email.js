@@ -12,16 +12,16 @@ const sendNewRegistrationEmail = async (adminEmails, newUser) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: adminEmails,
-        subject: "Pemberitahuan: Registrasi Akun Baru Perlu Persetujuan",
+        subject: "Announcement: New Account Registration Needed Approval",
         html: `
-            <h3>Registrasi Baru</h3>
-            <p>Ada akun baru dengan detail sebagai berikut yang menunggu persetujuan:</p>
+            <h3>New Registration</h3>
+            <p>There is new account with this detail that waiting for approval:</p>
             <ul>
-                <li>Nama: ${newUser.name}</li>
+                <li>Name: ${newUser.name}</li>
                 <li>Role: ${newUser.role}</li>
                 <li>Email: ${newUser.email}</li>
             </ul>
-            <p>Mohon segera login ke dashboard Admin untuk melakukan verifikasi.</p>
+            <p>Please login to dashboard Admin for verification.</p>
         `,
     };
 
@@ -37,13 +37,13 @@ const sendApprovalEmail = async (userEmail, userName, adminEmail) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: userEmail,
-        subject: "Selamat! Akun Anda Telah Disetujui",
+        subject: "Congratulations! Your account is approved",
         html: `
-            <h2>Halo, ${userName}!</h2>
-            <p>Akun Anda telah <b>disetujui</b>.</p>
-            <p>Sekarang Anda sudah bisa login dan menggunakan layanan kami sepenuhnya.</p>
+            <h2>Hello, ${userName}!</h2>
+            <p>You account is <b>approved</b>.</p>
+            <p>Now please login and try using our website.</p>
             <br>
-            <p><small>Disetujui oleh Admin: ${adminEmail}</small></p>
+            <p><small>Approved by Admin: ${adminEmail}</small></p>
         `,
     };
 
@@ -63,10 +63,10 @@ const sendResetLink = async (email, resetToken) => {
         to: email,
         subject: "Password Reset Link",
         html: `
-            <p>Anda meminta untuk mereset password.</p>
-            <p>Berikut adalah link untuk mereset password Anda:</p>
+            <p>You asked to reset password.</p>
+            <p>This link is used to reset your password:</p>
             <a href="${resetLink}">Reset Password</a>
-            <p>Link ini valid selama 1 jam.</p>
+            <p>This link valid for 1 hour.</p>
         `,
     };
 

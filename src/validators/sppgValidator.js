@@ -2,32 +2,32 @@ const { body, param, query } = require('express-validator');
 
 const sppgValidator = {
     paginationOnly: [
-        query('page').optional().isInt({ min: 1 }).toInt().withMessage('Page must be a positive number'),
-        query('limit').optional().isInt({ min: 1 }).toInt().withMessage('Limit must be a positive number')
+        query('page').optional().isInt({ min: 1 }).toInt().withMessage('Page must be a number, minimum 1'),
+        query('limit').optional().isInt({ min: 1 }).toInt().withMessage('Limit must be a number between 1 - 100')
     ],
 
     getPeriodic: [
-        query('start_date').notEmpty().isISO8601().withMessage('start_date menggunakan format (YYYY-MM-DD)'),
-        query('end_date').notEmpty().isISO8601().withMessage('end_date tidak boleh kosong (YYYY-MM-DD)'),
+        query('start_date').notEmpty().isISO8601().withMessage('Start Date must be a valid date format (YYYY-MM-DD)'),
+        query('end_date').notEmpty().isISO8601().withMessage('End Date must be a valid date format (YYYY-MM-DD)'),
         query('page').optional().isInt({ min: 1 }).toInt(),
         query('limit').optional().isInt({ min: 1 }).toInt()
     ],
 
     createDailyReport: [
-        body('date_report').notEmpty().isISO8601().withMessage('date_report tidak boleh kosong'),
-        body('menu_name').notEmpty().isString().withMessage('Menu name tidak boleh kosong'),
-        body('meal_time').notEmpty().isString().withMessage('Meal time tidak boleh kosong'),
-        body('total_portion').notEmpty().isInt({ min: 1 }).withMessage('Portion tidak boleh kosong'),
+        body('date_report').notEmpty().isISO8601().withMessage('Report Date is required'),
+        body('menu_name').notEmpty().isString().withMessage('Menu Name is required'),
+        body('meal_time').notEmpty().isString().withMessage('Meal Time is required'),
+        body('total_portion').notEmpty().isInt({ min: 1 }).withMessage('Portion is required'),
         body('description')
-            .notEmpty().withMessage('Deskripsi laporan tidak boleh kosong')
-            .isString().withMessage('Deskripsi harus berupa teks')
-            .isLength({ min: 10 }).withMessage('Deskripsi minimal 10 karakter'),
+            .notEmpty().withMessage('Description is required')
+            .isString().withMessage('Description must be a string')
+            .isLength({ min: 10 }).withMessage('Description must be at least 10 characters long'),
         body('energy').notEmpty().isNumeric(),
         body('protein').notEmpty().isNumeric(),
         body('fat').notEmpty().isNumeric(),
         body('carbohydrate').notEmpty().isNumeric(),
         body('budgets')
-            .notEmpty().withMessage('Budgets detail tidak boleh kosong')
+            .notEmpty().withMessage('Detail Budgets is required')
             .custom((value) => {
                 try {
                     const data = typeof value === 'string' ? JSON.parse(value) : value;
@@ -45,11 +45,11 @@ const sppgValidator = {
     ],
 
     updateBudget: [
-        body('monthly_budget').notEmpty().isNumeric().withMessage('Monthly budget tidak boleh kosong (angka)')
+        body('monthly_budget').notEmpty().isNumeric().withMessage('Monthly budget is required')
     ],
 
     checkUUID: [
-        param('id_daily_report').isUUID().withMessage('ID must be a valid UUID')
+        param('id_daily_report').isUUID().withMessage('ID must be a valid UUID format')
     ]
 };
 

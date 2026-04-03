@@ -4,10 +4,10 @@ const adminValidator = {
     checkPagination: [
         query('page')
             .optional()
-            .isInt({ min: 1 }).withMessage('Page harus berupa angka minimal 1'),
+            .isInt({ min: 1 }).withMessage('Page must be a number, minimum 1'),
         query('limit')
             .optional()
-            .isInt({ min: 1, max: 100 }).withMessage('Limit harus berupa angka antara 1 - 100')
+            .isInt({ min: 1, max: 100 }).withMessage('Limit must be a number between 1 - 100')
     ],
     
     updateAccountStatus: [
