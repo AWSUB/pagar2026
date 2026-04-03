@@ -19,11 +19,7 @@ class SchoolController {
                 meta: result.meta
             });
         } catch (error) {
-            console.error('Error getSppgList:', error);
-            return res.status(500).json({ 
-                message: 'Internal server error', 
-                error: error.message 
-            });
+            next(error);
         }
     }
 
@@ -35,15 +31,7 @@ class SchoolController {
                 data: school 
             });
         } catch (error) {
-            console.error(error);
-            if (error.message === 'School profile not found') {
-                return res.status(404).json({ 
-                    message: error.message 
-                });
-            }
-            return res.status(500).json({ 
-                message: 'Internal server error' 
-            });
+            next(error);
         }
     }
 
@@ -58,15 +46,7 @@ class SchoolController {
                 data: updatedSchool 
             });
         } catch (error) {
-            console.error(error);
-            if (error.message === 'School profile not found') {
-                return res.status(404).json({ 
-                    message: error.message 
-                });
-            }
-            return res.status(500).json({ 
-                message: 'Internal server error' 
-            });
+            next(error);
         }
     }
 
@@ -81,10 +61,7 @@ class SchoolController {
                 meta: result.meta 
             });
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ 
-                message: 'Internal server error' 
-            });
+            next(error);
         }
     }
 
@@ -98,15 +75,7 @@ class SchoolController {
                 data: newReview 
             });
         } catch (error) {
-            console.error('Error createReview (School):', error);
-            if (['Profil sekolah tidak ditemukan', 'Instansi SPPG not found'].includes(error.message)) {
-                return res.status(404).json({ 
-                    message: error.message 
-                });
-            }
-            return res.status(500).json({ 
-                message: 'Internal server error' 
-            });
+            next(error);
         }
     }
 
@@ -121,11 +90,7 @@ class SchoolController {
                 meta: result.meta
             });
         } catch (error) {
-            console.error('Error getDashboardReviews:', error);
-            return res.status(500).json({ 
-                message: 'Internal server error', 
-                error: error.message 
-            });
+            next(error);
         }
     }
 
@@ -140,11 +105,7 @@ class SchoolController {
                 meta: result.meta
             });
         } catch (error) {
-            console.error('Error getDashboardSppgReports:', error);
-            return res.status(500).json({ 
-                message: 'Internal server error', 
-                error: error.message 
-            });
+            next(error);
         }
     }
 
@@ -159,18 +120,7 @@ class SchoolController {
                 data: detailReport
             });
         } catch (error) {
-            console.error('Error getDetailSppgReport:', error);
-                
-            if (error.message === 'Laporan SPPG not found') {
-                return res.status(404).json({ 
-                    message: error.message 
-                });
-            }
-                
-            return res.status(500).json({
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     }
 }
