@@ -7,7 +7,7 @@ const getPaginationParams = (query, defaultLimit = 10) => {
 };
 
 const sppgController = {
-    async getMyReviews(req, res) {
+    async getMyReviews(req, res, next) {
         try {
             const id_sppg = req.user.id_sppg || req.user.id_user; 
 
@@ -164,7 +164,7 @@ const sppgController = {
         }
     },
 
-    async getReviewDetail(req, res) {
+    async getReviewDetail(req, res, next) {
         try {
             const { id_review } = req.params;
 

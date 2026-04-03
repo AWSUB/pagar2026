@@ -8,7 +8,7 @@ const getPaginationParams = (query, defaultLimit = 10) => {
 };
 
 class SchoolController {
-    async getSppgList(req, res) {
+    async getSppgList(req, res, next) {
         try {
             const { page, limit } = getPaginationParams(req.query, 20);
             const result = await schoolService.getSppgList(page, limit);
@@ -23,7 +23,7 @@ class SchoolController {
         }
     }
 
-    async getProfile(req, res) {
+    async getProfile(req, res, next) {
         try {
             const school = await schoolService.getProfile(req.user.id_user);
             return res.status(200).json({ 
@@ -35,7 +35,7 @@ class SchoolController {
         }
     }
 
-    async updateProfile(req, res) {
+    async updateProfile(req, res, next) {
         try {
             const { school_name, school_address } = req.body;
             const updatedSchool = await schoolService.updateProfile(req.user.id_user, school_name, school_address);
@@ -65,7 +65,7 @@ class SchoolController {
         }
     }
 
-    async createReview(req, res) {
+    async createReview(req, res, next) {
         try {
             const newReview = await schoolService.createReview(req.user.id_user, req.body, req.files);
             
@@ -79,7 +79,7 @@ class SchoolController {
         }
     }
 
-    async getDashboardReviews(req, res) {
+    async getDashboardReviews(req, res, next) {
         try {
             const { page, limit, keyword } = getPaginationParams(req.query, 15);
             const result = await schoolService.getDashboardReviews(page, limit, keyword);
@@ -94,7 +94,7 @@ class SchoolController {
         }
     }
 
-    async getDashboardSppgReports(req, res) {
+    async getDashboardSppgReports(req, res, next) {
         try {
             const { page, limit, keyword } = getPaginationParams(req.query, 15);
             const result = await schoolService.getDashboardSppgReports(page, limit, keyword);
@@ -109,7 +109,7 @@ class SchoolController {
         }
     }
 
-    async getDetailSppgReport(req, res) {
+    async getDetailSppgReport(req, res, next) {
         try {
             const { id_daily_report } = req.params; 
                 

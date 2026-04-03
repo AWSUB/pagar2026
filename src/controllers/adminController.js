@@ -152,7 +152,7 @@ const adminController = {
         }
     },
 
-    async getDashboardReviews(req, res) {
+    async getDashboardReviews(req, res, next) {
         try {
             const { page, limit } = getPaginationParams(req.query, 10);
             const result = await adminService.getDashboardReviews(page, limit);

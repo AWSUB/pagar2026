@@ -21,7 +21,7 @@ class PublicController {
         }
     }
 
-    async getSppgList(req, res) {
+    async getSppgList(req, res, next) {
         try {
             const sppgList = await publicService.getSppgList();
             
@@ -34,7 +34,7 @@ class PublicController {
         }
     }
 
-    async createReview(req, res) {
+    async createReview(req, res, next) {
         try {
             const id_user = req.user ? req.user.id_user : null; 
             
@@ -49,7 +49,7 @@ class PublicController {
         }
     }
 
-    async getDashboardReviews(req, res) {
+    async getDashboardReviews(req, res, next) {
         try {
             const { page, limit, keyword } = getPaginationParams(req.query, 15);
             const result = await publicService.getDashboardReviews(page, limit, keyword);
@@ -64,7 +64,7 @@ class PublicController {
         }
     }
 
-    async getDashboardSppgReports(req, res) {
+    async getDashboardSppgReports(req, res, next) {
         try {
             const { page, limit, keyword } = getPaginationParams(req.query, 15);
             const result = await publicService.getDashboardSppgReports(page, limit, keyword);
@@ -79,7 +79,7 @@ class PublicController {
         }
     }
 
-    async getDetailSppgReport(req, res) {
+    async getDetailSppgReport(req, res, next) {
         try {
             const { id_daily_report } = req.params; 
             
