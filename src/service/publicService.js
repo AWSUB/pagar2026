@@ -59,8 +59,10 @@ class PublicService {
             const reviewData = review.toJSON();
             
             const userRole = reviewData.user ? reviewData.user.role : 'PUBLIC';
-            const userName = reviewData.user ? reviewData.user.username : 'Anonim';
-            const schoolName = reviewData.school ? reviewData.school.school_name : 'School is unknown';
+            const userName = reviewData.user ? reviewData.user.username : 'Anonim';                        
+            const schoolName = reviewData.school ? reviewData.school.school_name : null;
+            const sppgName = reviewData.sppg ? reviewData.sppg.sppg_name : null;
+            const locationDisplay = schoolName || sppgName || 'Location is unknown';
 
             let authorName = '';
             let displayAuthor = '';
@@ -68,9 +70,10 @@ class PublicService {
             if (userRole === 'SCHOOL') {
                 authorName = userName;
                 displayAuthor = `${schoolName}`;
+                displayAuthor = `${locationDisplay}`;
             } else {
                 authorName = 'Anonim';
-                displayAuthor = `Anonim - ${schoolName}`;
+                displayAuthor = `${locationDisplay}`;
             }
 
             return {
@@ -78,6 +81,7 @@ class PublicService {
                 author_name: authorName,
                 display_author: displayAuthor,
                 school_name: schoolName,
+                locationName: locationDisplay,
                 user: undefined 
             };
         });
