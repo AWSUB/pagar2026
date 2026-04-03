@@ -1,7 +1,7 @@
+require('dotenv').config();
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,7 +12,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'pagar_api/sppg_reports',
+    folder: 'pagar_api_uploads',
     allowed_formats: [
         'jpg', 
         'jpeg', 
