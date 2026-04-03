@@ -149,7 +149,7 @@ class SchoolRepository {
                 },
                 {
                     model: Budget,
-                    as: 'budget'
+                    as: 'budgets'
                 },
                 {
                     model: Attachment,

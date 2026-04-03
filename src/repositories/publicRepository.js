@@ -131,7 +131,7 @@ async findDashboardReviews(limit, offset, keyword = '') {
                 },
                 {
                     model: Budget,
-                    as: 'budget'
+                    as: 'budgets'
                 },
                 {
                     model: Attachment,

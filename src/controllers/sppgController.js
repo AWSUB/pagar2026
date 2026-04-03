@@ -28,11 +28,7 @@ const sppgController = {
                 meta: result.meta
             });
         } catch (error) {
-            console.error('Error getMyReviews (SPPG):', error);
-            return res.status(500).json({
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     },
 
@@ -44,10 +40,6 @@ const sppgController = {
                 data: profile 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG Profile not found' 
-            });
             next(error);
         }
     },
@@ -61,10 +53,6 @@ const sppgController = {
                 data: updated 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG Profile not found' 
-            });
             next(error);
         }
     },
@@ -77,10 +65,6 @@ const sppgController = {
                 data 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG Profile not found' 
-            });
             next(error);
         }
     },
@@ -93,10 +77,6 @@ const sppgController = {
                 data: report 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'Report or SPPG not found' 
-            });
             next(error);
         }
     },
@@ -113,10 +93,6 @@ const sppgController = {
                 data 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG Profile not found' 
-            });
             next(error);
         }
     },
@@ -132,10 +108,6 @@ const sppgController = {
                 data 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG Profile not found' 
-            });
             next(error);
         }
     },
@@ -172,10 +144,6 @@ const sppgController = {
                 data: result 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG profile not found' 
-            });
             next(error);
         }
     },
@@ -192,10 +160,6 @@ const sppgController = {
                 }
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') return res.status(404).json({ 
-                status: 'error', 
-                message: 'SPPG profile not found' 
-            });
             next(error);
         }
     },
@@ -211,20 +175,7 @@ const sppgController = {
                 data: result
             });
         } catch (error) {
-            console.error('Error getReviewDetail:', error);
-            
-            if (error.message === 'NOT_FOUND') {
-                return res.status(404).json({
-                    status: 'error',
-                    message: 'Review tidak ditemukan'
-                });
-            }
-
-            return res.status(500).json({
-                status: 'error',
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     }
 };

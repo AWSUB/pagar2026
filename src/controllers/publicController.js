@@ -17,12 +17,6 @@ class PublicController {
                 data: profile 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') {
-                return res.status(404).json({ 
-                    status: 'error', 
-                    message: 'Public Profile not found' 
-                });
-            }
             next(error);
         }
     }
@@ -36,11 +30,7 @@ class PublicController {
                 data: sppgList
             });
         } catch (error) {
-            console.error('Error getSppgList:', error);
-            return res.status(500).json({
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     }
 
@@ -55,16 +45,7 @@ class PublicController {
                 data: newReview 
             });
         } catch (error) {
-            console.error('Error createReview (Public):', error);
-            if (error.message === 'SPPG not found') {
-                return res.status(404).json({ 
-                    message: error.message 
-                });
-            }
-            return res.status(500).json({ 
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     }
 
@@ -79,11 +60,7 @@ class PublicController {
                 meta: result.meta
             });
         } catch (error) {
-            console.error('Error getDashboardReviews (Public):', error);
-            return res.status(500).json({
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     }
 
@@ -98,11 +75,7 @@ class PublicController {
                 meta: result.meta
             });
         } catch (error) {
-            console.error('Error getDashboardSppgReports:', error);
-            return res.status(500).json({
-                message: 'Internal server error',
-                error: error.message
-            });
+            next(error);
         }
     }
 

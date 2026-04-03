@@ -10,7 +10,6 @@ class SppgRepository {
             order: [['createdAt', 'DESC']],
             limit,
             offset,
-            distinct: true,
             include: [
                 {
                     model: School,
