@@ -15,10 +15,7 @@ class AuthService {
 
         const existingUser = await authRepository.findByUsernameOrEmail(username, email);
         if (existingUser) {
-            throw new HttpError(
-                400, 
-                'Username or Email is already taken.'
-            );
+            throw new HttpError(400, 'Username or Email is already taken.');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -46,18 +43,12 @@ class AuthService {
         } = data;
 
         if (!school_name || !school_address) {
-            throw new HttpError(
-                400, 
-                'School name and address are required.'
-            );
+            throw new HttpError(400, 'School name and address are required.');
         }
 
         const existingUser = await authRepository.findByUsernameOrEmail(username, email);
         if (existingUser) {
-            throw new HttpError(
-                400, 
-                'Username or Email is already taken.'
-            );
+            throw new HttpError(400, 'Username or Email is already taken.');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -123,18 +114,12 @@ class AuthService {
         } = data;
 
         if (!sppg_name || !sppg_address) {
-            throw new HttpError(
-                400, 
-                'SPPG name and address are required.'
-            );
+            throw new HttpError(400, 'SPPG name and address are required.');
         }
 
         const existingUser = await authRepository.findByUsernameOrEmail(username, email);
         if (existingUser) {
-            throw new HttpError(
-                400, 
-                'Username or Email is already taken.'
-            );
+            throw new HttpError(400, 'Username or Email is already taken.');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -206,23 +191,14 @@ class AuthService {
 
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) {
-            throw new HttpError(
-                401, 
-                'Invalid credentials.'
-            );
+            throw new HttpError(401, 'Invalid credentials.');
         }
 
         if (user.account_status === 'PENDING') {
-            throw new HttpError(
-                403, 
-                'Account is waiting for Admin approval.'
-            );
+            throw new HttpError(403, 'Account is waiting for Admin approval.');
         }
         if (user.account_status === 'REJECTED') {
-            throw new HttpError(
-                403, 
-                'Account registration was rejected.'
-            );
+            throw new HttpError(403, 'Account registration was rejected.');
         }
 
         const token = generateToken({ 

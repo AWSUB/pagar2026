@@ -17,7 +17,7 @@ const adminService = {
         const profile = await adminRepository.getProfile(id_user);
 
         if (!profile) {
-            throw new Error('NOT_FOUND');
+            throw new HttpError(404, 'Profile not found');
         }
 
         return profile;
@@ -27,7 +27,7 @@ const adminService = {
         const user = await userRepository.updateAccountStatus(id_user, 'approved');
 
         if (!user) {
-            throw new Error('NOT_FOUND');
+            throw new HttpError('NOT_FOUND');
         }
 
         try {

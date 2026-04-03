@@ -1,5 +1,6 @@
 const schoolRepository = require('../repositories/schoolRepository');
 const { sequelize } = require('../models');
+const HttpError = require('../utils/HttpError');
 
 class SchoolService {
     _buildPaginationMeta(count, page, limit) {
@@ -27,13 +28,17 @@ class SchoolService {
 
     async getProfile(id_user) {
         const school = await schoolRepository.findSchoolByUserId(id_user);
-        if (!school) throw new Error('School profile not found');
+        if (!school) {
+            throw new HttpError(404, 'School profile not found');
+        }
         return school;
     }
 
     async updateProfile(id_user, school_name, school_address) {
         const school = await schoolRepository.findSchoolByUserId(id_user);
-        if (!school) throw new Error('School profile not found');
+        if (!school) {
+            throw new HttpError(404, 'School profile not found');
+        }
 
         return await schoolRepository.updateSchoolProfile(school, {
             school_name,
@@ -57,12 +62,16 @@ class SchoolService {
 
     async createReview(id_user, reviewBody, files) {
         const school = await schoolRepository.findSchoolByUserId(id_user);
-        if (!school) throw new Error('School Profile not found');
+        if (!school) {
+            throw new HttpError(404, 'School Profile not found');
+        }
 
         const { id_sppg, title, description, rating_score } = reviewBody;
 
         const sppg = await schoolRepository.findSppgById(id_sppg);
-        if (!sppg) throw new Error('Instansi SPPG not found');
+        if (!sppg) {
+            throw new HttpError(404, 'Instansi SPPG not found');
+        }
 
         const reviewData = {
             id_user: id_user,
@@ -147,7 +156,7 @@ class SchoolService {
         const report = await schoolRepository.findDailyReportById(id_daily_report);
             
         if (!report) {
-            throw new Error('Laporan SPPG not found');
+            throw new HttpError(404, 'Laporan SPPG not found');
         }
             
         return report;

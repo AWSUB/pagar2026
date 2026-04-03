@@ -1,5 +1,6 @@
 const publicRepository = require('../repositories/publicRepository');
 const { sequelize } = require('../models');
+const HttpError = require('../utils/HttpError');
 
 class PublicService {
     _buildPaginationMeta(count, page, limit) {
@@ -15,7 +16,7 @@ class PublicService {
         const profile = await publicRepository.getProfile(id_user);
 
         if (!profile) {
-            throw new Error('NOT_FOUND');
+            throw new HttpError(404, 'Profile not found');
         }
 
         return profile;
@@ -29,7 +30,9 @@ class PublicService {
         const { id_sppg, title, description, rating_score } = reviewBody;
 
         const sppg = await publicRepository.findSppgById(id_sppg);
-        if (!sppg) throw new Error('SPPG not found');
+        if (!sppg) {
+            throw new HttpError(404, 'SPPG not found');
+        }
 
         const reviewData = {
             id_user: id_user,
@@ -114,7 +117,7 @@ class PublicService {
         const report = await publicRepository.findDailyReportById(id_daily_report);
         
         if (!report) {
-            throw new Error('Laporan SPPG not found');
+            throw new HttpError(404, 'Laporan SPPG not found');
         }
         
         return report;

@@ -2,6 +2,7 @@ const sppgRepository = require('../repositories/sppgRepository');
 const { sequelize } = require('../models');
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit-table');
+const HttpError = require('../utils/HttpError');
 
 class SppgService {
     _buildPaginationMeta(count, page, limit) {
@@ -48,13 +49,17 @@ class SppgService {
 
     async getProfile(id_user) {
         const profile = await sppgRepository.findProfileWithUser(id_user);
-        if (!profile) throw new Error('NOT_FOUND');
+        if (!profile) {
+            throw new HttpError(404, 'Profile not found');
+        }
         return profile;
     }
 
     async updateProfile(id_user, updateData) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Profile not found');
+        }
 
         await sppg.update({
             sppg_name: updateData.sppg_name || sppg.sppg_name,
@@ -65,7 +70,9 @@ class SppgService {
 
     async getDashboardData(id_user) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Sppg not found');
+        }
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -106,16 +113,22 @@ class SppgService {
 
     async getReportById(id_user, id_report) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Sppg not found');
+        }
         
         const report = await sppgRepository.findReportById(id_report, sppg.id_sppg);
-        if (!report) throw new Error('NOT_FOUND');
+        if (!report) {
+            throw new HttpError(404, 'Report not found');
+        }
         return report;
     }
 
     async getPeriodicReports(id_user, start_date, end_date, page = 1, limit = 10) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Sppg not found');
+        }
 
         const offset = (page - 1) * limit;
         const result = await sppgRepository.findPeriodicReportsPaginated(
@@ -141,7 +154,9 @@ class SppgService {
 
     async getDailyReports(id_user, page = 1, limit = 10) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Sppg not found');
+        }
 
         const offset = (page - 1) * limit;
         const result = await sppgRepository.findAllDailyReportsPaginated(sppg.id_sppg, limit, offset);
@@ -154,7 +169,9 @@ class SppgService {
 
     async createDailyReport(id_user, data, files) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError('Sppg not found');
+        }
 
         const { budgets, ...reportData } = data;
     
@@ -181,7 +198,9 @@ class SppgService {
 
     async updateMonthlyBudget(id_user, monthly_budget) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Sppg not found');
+        }
 
         await sppg.update({ monthly_budget });
         return sppg;
@@ -189,7 +208,9 @@ class SppgService {
 
     async getReportData(id_user, start_date, end_date) {
         const sppg = await sppgRepository.findSppgByUserId(id_user);
-        if (!sppg) throw new Error('NOT_FOUND');
+        if (!sppg) {
+            throw new HttpError(404, 'Sppg not found');
+        }
 
         return await sppgRepository.getReportsByDateRange(
             sppg.id_sppg,
@@ -281,7 +302,7 @@ class SppgService {
         const review = await sppgRepository.findReviewById(id_review);
         
         if (!review) {
-            throw new Error('NOT_FOUND');
+            throw new HttpError(404, 'Review not found');
         }
 
         const reviewData = review.toJSON();
