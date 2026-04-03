@@ -4,6 +4,48 @@ const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit-table');
 
 class SppgService {
+    _buildPaginationMeta(count, page, limit) {
+        return {
+            totalItems: count,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            limit: limit
+        };
+    }
+
+    async getSppgReviews(id_sppg, page = 1, limit = 10) {
+        const offset = (page - 1) * limit;
+        
+        const { count, rows } = await sppgRepository.findReviewsBySppgId(id_sppg, limit, offset);
+
+        const formattedReviews = rows.map(review => {
+            const reviewData = review.toJSON();
+            
+            const userRole = reviewData.user ? reviewData.user.role : 'PUBLIC';
+            const schoolName = reviewData.school ? reviewData.school.school_name : null;
+
+            let displayPelapor = 'Anonim';
+            if (userRole === 'SCHOOL' && schoolName) {
+                displayPelapor = schoolName;
+            }
+
+            return {
+                id_review: reviewData.id_review,
+                pelapor: displayPelapor,
+                title: reviewData.title, 
+                description: reviewData.description,
+                rating_score: reviewData.rating_score,
+                createdAt: reviewData.createdAt,
+                attachments: reviewData.attachments || []
+            };
+        });
+
+        return {
+            data: formattedReviews,
+            meta: this._buildPaginationMeta(count, page, limit)
+        };
+    }
+
     async getProfile(id_user) {
         const profile = await sppgRepository.findProfileWithUser(id_user);
         if (!profile) throw new Error('NOT_FOUND');
@@ -92,11 +134,7 @@ class SppgService {
                 end_date 
             },
             total_budget_spent: total_budget_period,
-            pagination: {
-                totalItems: result.count,
-                totalPages: Math.ceil(result.count / limit),
-                currentPage: page
-            },
+            pagination: this._buildPaginationMeta(result.count, page, limit),
             reports: result.rows
         };
     }
@@ -109,11 +147,7 @@ class SppgService {
         const result = await sppgRepository.findAllDailyReportsPaginated(sppg.id_sppg, limit, offset);
 
         return {
-            pagination: {
-                totalItems: result.count,
-                totalPages: Math.ceil(result.count / limit),
-                currentPage: page
-            },
+            pagination: this._buildPaginationMeta(result.count, page, limit),
             reports: result.rows
         };
     }
@@ -167,7 +201,7 @@ class SppgService {
     async generateExcel(id_user, start_date, end_date) {
         const reports = await this.getReportData(id_user, start_date, end_date);
         const workbook = new ExcelJS.Workbook();
-        const sheet = workbook.addWorkSheet('Laporan Periodik');
+        const sheet = workbook.addWorksheet('Laporan Periodik');
 
         sheet.columns = [
             { header: 'Tanggal', key: 'date', width: 15 },
@@ -184,7 +218,7 @@ class SppgService {
         ];
 
         reports.forEach(r => {
-            const budgetString = r.budgets ? r.budgets.map(b => `- ${b.item_name}: Rp ${b.item-price.toLocaleString('id-ID')}`).join('\n') : '-';
+            const budgetString = r.budgets ? r.budgets.map(b => `- ${b.item_name}: Rp ${Number(b.item_price).toLocaleString('id-ID')}`).join('\n') : '-';
 
             const attachmentString = r.attachments ? r.attachments.map(a => a.file_url).join('\n') : '-';
 
@@ -241,6 +275,34 @@ class SppgService {
 
         doc.end();
         return doc;
+    }
+
+    async getReviewById(id_review) {
+        const review = await sppgRepository.findReviewById(id_review);
+        
+        if (!review) {
+            throw new Error('NOT_FOUND');
+        }
+
+        const reviewData = review.toJSON();
+            
+        const userRole = reviewData.user ? reviewData.user.role : 'PUBLIC';
+        const schoolName = reviewData.school ? reviewData.school.school_name : null;
+
+        let displayPelapor = 'Anonim';
+        if (userRole === 'SCHOOL' && schoolName) {
+            displayPelapor = schoolName;
+        }
+
+        return {
+            id_review: reviewData.id_review,
+            pelapor: displayPelapor,
+            title: reviewData.title, 
+            description: reviewData.description,
+            rating_score: reviewData.rating_score,
+            createdAt: reviewData.createdAt,
+            attachments: reviewData.attachments || []
+        };
     }
 }
 

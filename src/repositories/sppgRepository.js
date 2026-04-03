@@ -2,6 +2,37 @@ const { User, Sppg, DailyReport, Budget, Attachment, Review, School } = require(
 const { Op } = require('sequelize');
 
 class SppgRepository {
+    async findReviewsBySppgId(id_sppg, limit, offset) {
+        const condition = { id_sppg: id_sppg };
+
+        return await Review.findAndCountAll({
+            where: condition,
+            order: [['createdAt', 'DESC']],
+            limit,
+            offset,
+            distinct: true,
+            include: [
+                {
+                    model: School,
+                    as: 'school',
+                    attributes: ['school_name']
+                },
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: ['username', 'role']
+                },
+                {
+                    model: Attachment,
+                    as: 'attachments',
+                    where: { entity_type: 'REVIEW' },
+                    required: false,
+                    attributes: ['file_url']
+                }
+            ]
+        });
+    }
+
     async findSppgByUserId(id_user) {
         return await Sppg.findOne({ 
             where: { 
@@ -206,6 +237,26 @@ class SppgRepository {
         }
 
         return newReport;
+    }
+
+    async findReviewById(id_review) {
+        return await Review.findOne({
+            where: { id_review },
+            include: [
+                { 
+                    model: User, 
+                    as: 'user', 
+                    attributes: ['role'] 
+                }, { 
+                    model: School, 
+                    as: 'school', 
+                    attributes: ['school_name'] 
+                }, { 
+                    model: Attachment, 
+                    as: 'attachments' 
+                }
+            ]
+        });
     }
 }
 

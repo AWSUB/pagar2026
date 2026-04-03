@@ -1,6 +1,41 @@
 const sppgService = require('../service/sppgService');
 
+const getPaginationParams = (query, defaultLimit = 10) => {
+    const page = parseInt(query.page, 10) || 1;
+    const limit = parseInt(query.limit, 10) || defaultLimit;
+    return { page, limit };
+};
+
 const sppgController = {
+    async getMyReviews(req, res) {
+        try {
+            const id_sppg = req.user.id_sppg || req.user.id_user; 
+
+            if (!id_sppg) {
+                return res.status(403).json({
+                    status: 'error',
+                    message: 'Akses ditolak. ID SPPG tidak ditemukan.'
+                });
+            }
+
+            const { page, limit } = getPaginationParams(req.query, 10);
+            
+            const result = await sppgService.getSppgReviews(id_sppg, page, limit);
+
+            return res.status(200).json({
+                status: 'success',
+                data: result.data,
+                meta: result.meta
+            });
+        } catch (error) {
+            console.error('Error getMyReviews (SPPG):', error);
+            return res.status(500).json({
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
+    },
+
     async getProfile(req, res, next) {
         try {
             const profile = await sppgService.getProfile(req.user.id_user);
@@ -162,6 +197,34 @@ const sppgController = {
                 message: 'SPPG profile not found' 
             });
             next(error);
+        }
+    },
+
+    async getReviewDetail(req, res) {
+        try {
+            const { id_review } = req.params;
+
+            const result = await sppgService.getReviewById(id_review);
+
+            return res.status(200).json({
+                status: 'success',
+                data: result
+            });
+        } catch (error) {
+            console.error('Error getReviewDetail:', error);
+            
+            if (error.message === 'NOT_FOUND') {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'Review tidak ditemukan'
+                });
+            }
+
+            return res.status(500).json({
+                status: 'error',
+                message: 'Internal server error',
+                error: error.message
+            });
         }
     }
 };

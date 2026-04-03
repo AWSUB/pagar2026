@@ -8,6 +8,14 @@ const upload = require('../middlewares/uploadMiddleware');
 
 router.use(verifyToken, isSppg);
 
+router.get('/reviews', 
+    sppgController.getMyReviews
+);
+
+router.get('/reviews/:id_review', 
+    sppgController.getReviewDetail
+);
+
 router.get('/profile', 
     sppgController.getProfile
 );
