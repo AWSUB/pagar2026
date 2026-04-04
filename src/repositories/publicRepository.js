@@ -1,4 +1,4 @@
-const { School, DailyReport, Sppg, Review, Attachment, User } = require('../models');
+const { School, DailyReport, Sppg, Review, Attachment, User, Budget } = require('../models');
 const { Op } = require('sequelize');
 
 class PublicRepository {
